@@ -34,7 +34,7 @@ spec:
       containers:
         - name: snyky1
           image: "garethr/snyky1:latest"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 5000
@@ -48,10 +48,20 @@ spec:
               path: /
               port: http
           resources:
-            {}
+            {
+                limits: {
+                    cpu: 100
+                }
+            }
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
         - name: snyky2
           image: "garethr/snyky2:latest"
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 5000
@@ -72,8 +82,8 @@ spec:
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1
-            privileged: true
+            runAsUser: 10000
+            privileged: false
             capabilities:
               drop:
                 - all
